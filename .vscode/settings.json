@@ -1,0 +1,7 @@
+{
+  // Auto format document on save with ESLint
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always"
+  },
+}
