@@ -29,8 +29,18 @@ services:
     networks:
       - my-network
 
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - my-network
+
 volumes:
   postgres-data:
 
 networks:
   my-network:
+    external: true

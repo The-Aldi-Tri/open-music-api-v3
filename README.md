@@ -2,7 +2,13 @@
 
 Proyek ini adalah submission akhir(ketiga) pada learning path **Back-End Developer** pada course **Belajar Fundamental Aplikasi Back-End** di [Dicoding](dicoding.com).
 
+Proyek consumer untuk proyek ini dapat ditemukan di [Open Music API V3 - Consumer](https://github.com/The-Aldi-Tri/open-music-api-v3-consumer)
+
 ## How to run
+
+**Make sure project [Open Music API V3 - Consumer](https://github.com/The-Aldi-Tri/open-music-api-v3-consumer) are running in another Terminal/VS Code window.**
+
+Create an **.env** file in the root directory of project and fill it with variables based on the examples in the **.env.example** file
 
 ### - Locally
 
@@ -10,6 +16,8 @@ Proyek ini adalah submission akhir(ketiga) pada learning path **Back-End Develop
 
   - Node.js installed on your local machine. You can download it from [nodejs.org](https://nodejs.org/).
   - Postgresql database installed on your local machine. You can download it from [postgresql.org](https://www.postgresql.org/download/).
+  - **Redis** for caching installed on your local machine. You can download it from [redis.io](https://redis.io/downloads/).
+  - **RabbitMQ** for message broker installed on your local machine. You can download it from [rabbitmq.com](https://www.rabbitmq.com/docs/download).
 
 - Installation
 
@@ -39,6 +47,11 @@ Proyek ini adalah submission akhir(ketiga) pada learning path **Back-End Develop
   - **Visual Studio Code** ([VS Code](https://code.visualstudio.com/download))
   - **Docker** (Docker Engine with Compose plugin or [Docker Desktop](https://www.docker.com/products/docker-desktop/))
   - **Remote Development** extension pack for VS Code (Install from the VS Code Extensions marketplace)
+  - **Docker Images** you can search in [Docker Hub](https://hub.docker.com/search)
+    - Nodejs
+    - Postgres
+    - Redis
+    - RabbitMQ
 
 - Installation
 
