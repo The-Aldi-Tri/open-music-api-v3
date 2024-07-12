@@ -53,6 +53,12 @@ Create an **.env** file in the root directory of project and fill it with variab
     - Redis
     - RabbitMQ
 
+  Make sure you have Docker network named **my-network**. You can create this after installing docker with this command:
+  ```bash
+  docker network create -d bridge my-network
+  ```
+
+
 - Installation
 
   1. Clone the repository:
