@@ -48,6 +48,10 @@ const PlaylistSongActivitiesService = require('./services/postgres/PlaylistSongA
 // Storage(local)
 const StorageService = require('./services/storage/StorageService');
 
+// Likes
+const userAlbumLikes = require('./api/userAlbumLikes');
+const UserAlbumLikesService = require('./services/postgres/UserAlbumLikesService');
+
 const ClientError = require('./exceptions/ClientError');
 
 const init = async () => {
@@ -60,6 +64,7 @@ const init = async () => {
   const collaborationsService = new CollaborationsService();
   const playlistSongActivitiesService = new PlaylistSongActivitiesService();
   const storageService = new StorageService(path.resolve(__dirname, 'api/albums/images'));
+  const userAlbumLikesService = new UserAlbumLikesService();
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -171,6 +176,13 @@ const init = async () => {
         collabsService: collaborationsService,
         usersService,
         songsService,
+      },
+    },
+    {
+      plugin: userAlbumLikes,
+      options: {
+        service: userAlbumLikesService,
+        albumsService,
       },
     },
   ]);
