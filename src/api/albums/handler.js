@@ -1,3 +1,5 @@
+const config = require('../../utils/config');
+
 class AlbumsHandler {
   constructor(service, validator, service2, storageService) {
     this._service = service;
@@ -69,7 +71,7 @@ class AlbumsHandler {
 
     const filename = await this._storageService.writeFile(cover, cover.hapi);
 
-    await this._service.updateAlbumCoverUrl({ id: albumId, url: `http://${process.env.HOST}:${process.env.PORT}/albums/covers/${filename}` });
+    await this._service.updateAlbumCoverUrl({ id: albumId, url: `http://${config.app.host}:${config.app.port}/albums/covers/${filename}` });
 
     const response = h.response({
       status: 'success',
