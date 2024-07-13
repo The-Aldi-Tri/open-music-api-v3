@@ -166,6 +166,7 @@ const init = async () => {
         usersService,
         collabsService: collaborationsService,
         activitiesService: playlistSongActivitiesService,
+        cacheService,
       },
     },
     {

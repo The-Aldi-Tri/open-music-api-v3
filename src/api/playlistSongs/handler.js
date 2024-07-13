@@ -9,7 +9,7 @@ class PlaylistSongsHandler {
     usersService,
     collabsService,
     activitiesService,
-
+    cacheService,
   ) {
     this._service = service;
     this._validator = validator;
@@ -18,6 +18,7 @@ class PlaylistSongsHandler {
     this._usersService = usersService;
     this._collabsService = collabsService;
     this._activitiesService = activitiesService;
+    this._cacheService = cacheService;
   }
 
   async postPlaylistSongHandler(request, h) {
@@ -54,6 +55,8 @@ class PlaylistSongsHandler {
       action: 'add',
     });
 
+    await this._cacheService.delete(`playlist_songs:${playlistId}`);
+
     const response = h.response({
       status: 'success',
       message: 'Playlist song berhasil ditambahkan',
@@ -62,7 +65,7 @@ class PlaylistSongsHandler {
     return response;
   }
 
-  async getPlaylistSongsHandler(request) {
+  async getPlaylistSongsHandler(request, h) {
     const { id: credentialId } = request.auth.credentials;
     const playlistId = request.params.id;
 
@@ -83,21 +86,25 @@ class PlaylistSongsHandler {
       throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
     }
 
-    const playlist = await this._playlistsService.getPlaylistById(playlistId);
+    let isCached = false;
+    let playlistSongs;
 
-    const playlistSongs = await this._service.getPlaylistSongsByPlaylistId(playlistId);
+    try {
+      playlistSongs = JSON.parse(await this._cacheService.get(`playlist_songs:${playlistId}`));
+      isCached = true;
+    } catch (e) {
+      const playlist = await this._playlistsService.getPlaylistById(playlistId);
 
-    const songs = await Promise.all(playlistSongs.map(async (playlistSong) => {
-      const song = await this._songsService.getSongById(playlistSong.song_id);
-      return song;
-    }));
+      const { username } = await this._usersService.getUserById(playlist.owner);
 
-    const { username } = await this._usersService.getUserById(playlist.owner);
+      const playlistSongRecords = await this._service.getPlaylistSongsByPlaylistId(playlistId);
 
-    return {
-      status: 'success',
-      message: 'Playlist songs berhasil ditemukan',
-      data: {
+      const songs = await Promise.all(playlistSongRecords.map(async (record) => {
+        const song = await this._songsService.getSongById(record.song_id);
+        return song;
+      }));
+
+      playlistSongs = {
         playlist: {
           id: playlist.id,
           name: playlist.name,
@@ -108,8 +115,18 @@ class PlaylistSongsHandler {
             performer: song.performer,
           })),
         },
-      },
-    };
+      };
+
+      await this._cacheService.set(`playlist_songs:${playlistId}`, JSON.stringify(playlistSongs));
+    }
+
+    const response = h.response({
+      status: 'success',
+      data: playlistSongs,
+    });
+    response.code(200);
+    if (isCached) response.header('X-Data-Source', 'cache');
+    return response;
   }
 
   async deletePlaylistSongHandler(request) {
@@ -144,6 +161,8 @@ class PlaylistSongsHandler {
       user_id: credentialId,
       action: 'delete',
     });
+
+    await this._cacheService.delete(`playlist_songs:${playlistId}`);
 
     return {
       status: 'success',

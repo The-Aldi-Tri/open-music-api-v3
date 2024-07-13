@@ -12,6 +12,7 @@ module.exports = {
     usersService,
     collabsService,
     activitiesService,
+    cacheService,
   }) => {
     const playlistSongsHandler = new PlaylistSongsHandler(
       service,
@@ -21,6 +22,7 @@ module.exports = {
       usersService,
       collabsService,
       activitiesService,
+      cacheService,
     );
     server.route(routes(playlistSongsHandler));
   },
